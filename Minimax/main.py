@@ -22,6 +22,7 @@ class MyTree:
 
         self.tree = self.inline_node + self.data
         self.root = 0   # root index number
+        self.vd = []
 
     def get_child_index(self, index):
         if index >= len(self.inline_node):
@@ -43,9 +44,11 @@ def readData(filename):
 def tree_DFS(t, index, maxflag, abs):
     childs = t.get_child_index(index)
     # t.node_status[index] = 1
-    t.visited_node += 1
+    
+    t.vd.append(index)
     if childs is None:
         # print('t.tree[{0}] = {1}'.format(index, t.tree[index]))
+        t.visited_node += 1
         return t.tree[index]
 
     if maxflag:
@@ -78,8 +81,8 @@ def tree_DFS(t, index, maxflag, abs):
 
 if __name__ == "__main__":
     start_time = time.time()
-    alpha_beta_switch = False
-    filename = '4-9-100.txt'
+    alpha_beta_switch = True
+    filename = '2-7-10.txt'
     data = readData(filename=filename)
 
     atree = MyTree(child_number=data[0], level_number=data[1], data=data[2])
@@ -89,6 +92,7 @@ if __name__ == "__main__":
     print('')
     print('ReadData From {}'.format(filename))
     print('visited: {}'.format(atree.visited_node))
-    print('not visited: {}'.format(len(atree.tree)-atree.visited_node))
+    # print('not visited: {}'.format(len(atree.tree)-atree.visited_node))
     print('root result: {}'.format(atree.tree[atree.root]))
     print('Used: {}s'.format(time.time()-start_time))
+    print(atree.vd)
