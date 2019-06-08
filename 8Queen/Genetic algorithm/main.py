@@ -110,9 +110,9 @@ def show_all(pool):
 
 if __name__ == "__main__":
     start_time = time.time()
-    n = 16   # 8Queen
-    pool_num = 100   #
-    mutation = 0.6
+    n = 8   # 8Queen
+    pool_num = 10   #
+    mutation = 0.2
     live_time_limit = 5
 
     pool = initialization(n=n, pool_num=pool_num)
@@ -127,4 +127,5 @@ if __name__ == "__main__":
         del pool[pool_num:]  # Kill
         show_best(pool)
         turn += 1
+    print('{} Trun Ago'.format(turn))
     print('Used: {}s'.format(time.time()-start_time))
