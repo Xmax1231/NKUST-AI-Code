@@ -5,8 +5,14 @@ import random
 
 def search_DFS(now_app, now_level, limit_level, parent_h=None):
     if now_level >= limit_level:
+        # now_app.show_now_status()
+        # now_app.show_checkerboard()
         return now_app.heuristic()
     if not now_app.turn_check():  # You will pass this turn
+        if (now_level % 2) == 0:    # max
+            return float("-inf")
+        elif (now_level % 2) == 1:  # min
+            return float("inf")
         return now_app.heuristic()
 
     can_put_pos = now_app.can_put_pos
@@ -17,13 +23,14 @@ def search_DFS(now_app, now_level, limit_level, parent_h=None):
         now_h = float("inf")
 
     for pos in can_put_pos:
+        # print(pos)
         # now_level += 1
         child_app = BlackWriteChess.BWC(human_color=now_app.human_color,
                                         checkerboard=now_app.checkerboard, turn=now_app.turn)
         child_app.put_check(pos)
         child_app.previous_put = pos
-        child_app.flip(app.need_flip)
-        child_app.turn = (app.turn + 1) % 2
+        child_app.flip(child_app.need_flip)
+        child_app.turn = (child_app.turn + 1) % 2
 
         temp = search_DFS(child_app, now_level+1, limit_level, now_h)
 
@@ -50,16 +57,16 @@ def search_DFS(now_app, now_level, limit_level, parent_h=None):
     if now_level != 0:
         return now_h
     else:
-        return best_pos
+        return now_h, best_pos
 
 
 if __name__ == '__main__':
-    enemy_color = 0  # 敵人的顏色 None:空 0:白 1:黑
+    enemy_color = 1  # 敵人的顏色 None:空 0:白 1:黑
     AI_color = (enemy_color + 1) % 2
 
     app = BlackWriteChess.BWC(human_color=AI_color)
     app.a_new_game_start()
-
+    get_h = ''
     while True:
         if sum(x.count(None) for x in app.checkerboard) == 0:
             app.clear_screen()
@@ -68,6 +75,7 @@ if __name__ == '__main__':
             print('End Game')
             break
         if app.turn == enemy_color:  # 輪到對手了
+            # input('AI Get h: {0}'.format(get_h))
             app.next_turn()
         else:  # 輪到 AI 了
             if not app.turn_check():  # You will pass this turn
@@ -75,7 +83,7 @@ if __name__ == '__main__':
                 continue
 
             # x = random.randint(0, len(app.can_put_pos)-1)  # Random的部分
-            x = search_DFS(app, 0, 7)
+            get_h, x = search_DFS(app, 0, 3)
             print(x)
 
             # put = app.can_put_pos[x]

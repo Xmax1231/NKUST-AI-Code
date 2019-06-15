@@ -170,7 +170,7 @@ class BWC:
                 elif x == 1:
                     black_num += 1
         print('Now Status: Black {}, White {}'.format(black_num, white_num))
-        print('heuristic {} to human[{}]'.format(self.heuristic(), self.human))
+        print('heuristic {} to AI[{}]'.format(self.heuristic(), self.human))
 
     def show_checkerboard(self):
         '''
