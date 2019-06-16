@@ -25,6 +25,8 @@ class BWC:
         self.need_flip = []  # 由 self.put_check() 刷新
         self.can_put_pos = []   # 由 self.turn_check() 刷新
         self.previous_put = None
+        self.black_num = 0
+        self.white_num = 0
 
     def a_new_game_start(self):
         '''
@@ -41,19 +43,19 @@ class BWC:
         下個回合
 
         '''
-        self.clear_screen()
+        # self.clear_screen()
         self.show_now_status()
         print('{} Turn'.format('黑' if self.turn == 1 else '白'))
         self.show_checkerboard()
 
         if not self.turn_check():  # You will pass this turn
             self.turn = (self.turn + 1) % 2
-            return
+            return None
             # self.next_turn()
-        print(self.can_put_pos)
+        print('You can put: {}'.format(self.can_put_pos))
 
-        if not self.previous_put is None:
-            print('Previous Turn Put: {}'.format(self.previous_put))
+        # if not self.previous_put is None:
+        #     print('Previous Turn Put: {}'.format(self.previous_put))
 
         put = input('下哪邊? ')  # EX: f5
         while not self.put_check(put):
@@ -63,6 +65,7 @@ class BWC:
         self.flip(self.need_flip)
         self.turn = (self.turn + 1) % 2
         # self.next_turn()
+        return put
 
     def turn_check(self):
         '''
@@ -94,6 +97,8 @@ class BWC:
         此方法判斷放下位置是否為有效值
         self.need_flip 由此方法刷新
         '''
+        if len(put) != 2:
+            return False
         row = put[1]
         col = put[0]
         # Easy Check
@@ -161,21 +166,22 @@ class BWC:
         顯示當前狀態
         由此方法顯示出現在的黑棋與白棋之數量，之後可能把黑棋與白棋當作參數方便外部存取
         '''
-        black_num = 0
-        white_num = 0
+        self.black_num = 0
+        self.white_num = 0
         for y in self.checkerboard:
             for x in y:
                 if x == 0:
-                    white_num += 1
+                    self.white_num += 1
                 elif x == 1:
-                    black_num += 1
-        print('Now Status: Black {}, White {}'.format(black_num, white_num))
+                    self.black_num += 1
+        print('Now Status: Black {}, White {}'.format(self.black_num, self.white_num))
         print('heuristic {} to AI[{}]'.format(self.heuristic(), self.human))
 
     def show_checkerboard(self):
         '''
         顯示當前棋盤
         '''
+        print('')
         print('{0:^2} '.format(chr(12288)), end='')
         for c in self.cols:
             print('{0:{1}^2} '.format(c, chr(12288)), end='')
@@ -190,6 +196,7 @@ class BWC:
                 if x == 1:
                     print('[{0:{1}^1}]'.format('黑', chr(12288)), end='')
             print('')
+        print('')
 
     def heuristic(self):
         h = 0
@@ -199,7 +206,7 @@ class BWC:
                 if not self.checkerboard[y][x] is None:
                     # V2 參考了別人的評估表  還是被我打敗  = =
                     if [x, y] in [[0, 0], [0, 7], [7, 0], [7, 7]]:  # Good
-                        h += 90 if self.checkerboard[y][x] == self.human_color else -90
+                        h += 350 if self.checkerboard[y][x] == self.human_color else -350
                     elif [x, y] in [[1, 0], [0, 1], [6, 0], [7, 1], [0, 6], [1, 7], [7, 6], [6, 7]]:    # Bad
                         h += - \
                             60 if self.checkerboard[y][x] == self.human_color else 60
