@@ -131,7 +131,7 @@ if __name__ == '__main__':
             else:
                 temp_time = time()
                 # limit_level = min([len(app.can_put_pos), 5])
-                limit_level = 5
+                limit_level = 5 if len(app.can_put_pos) <= 5 else 3
                 # print(type(limit_level))
                 get_h, x = search_DFS(app, 0, limit_level)
                 print('This DFS Used {}'.format(time()-temp_time))
