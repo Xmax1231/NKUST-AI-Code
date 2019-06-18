@@ -81,13 +81,13 @@ if __name__ == '__main__':
             print('End Game')
             if app.black_num > app.white_num:
                 print('Black Win')
-                if AI_color == 0:
+                if AI_color == 1:
                     print('AI Win')
                 else:
                     print('AI Lose')
             elif app.black_num < app.white_num:
                 print('White Win')
-                if AI_color == 1:
+                if AI_color == 0:
                     print('AI Win')
                 else:
                     print('AI Lose')
@@ -130,8 +130,9 @@ if __name__ == '__main__':
                 get_h = 'Random'
             else:
                 temp_time = time()
-                limit_level = min([len(app.can_put_pos), 5])
-                print(type(limit_level))
+                # limit_level = min([len(app.can_put_pos), 5])
+                limit_level = 5
+                # print(type(limit_level))
                 get_h, x = search_DFS(app, 0, limit_level)
                 print('This DFS Used {}'.format(time()-temp_time))
 
